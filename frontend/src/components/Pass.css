@@ -1,3 +1,197 @@
-.h1 {
-  color: white;
+/* Container */
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
+  color: #e0e0e0;
+  font-family: "Poppins", sans-serif;
+  margin-top: -150px;
+}
+
+/* Form styles */
+.input-form {
+  background-color: #494949;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+}
+
+.input-form h2 {
+  background-color: transparent;
+}
+
+.input-group {
+  background-color: transparent;
+}
+
+.n-me {
+  background-color: transparent;
+  color: #000;
+}
+
+.input-group label {
+  color: #cccccc;
+}
+
+.input-form h2 {
+  color: #ffffff;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #ffffff;
+  outline: none;
+}
+
+.generate-btn {
+  background-color: #ff6347;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  width: 100%;
+}
+
+.generate-btn:hover,
+.download-btn:hover,
+.reset-btn:hover {
+  background-color: #e62f17;
+}
+
+/* Pass container (Airplane ticket style) */
+.pass-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket {
+  display: flex;
+  background: #f0f0f0;
+  width: 500px;
+  height: 200px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(149, 147, 147, 0.965);
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-left {
+  width: 70%;
+  background-color: #89949e;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+}
+
+.event-info {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.event-info h2 {
+  background-color: #89949e;
+}
+
+.event-info p {
+  background-color: #89949e;
+  color: #101820;
+}
+
+.ticket-id p {
+  background-color: #89949e;
+  color: #000;
+}
+
+.pass-date {
+  font-size: 16px;
+  color: #bfc9d1;
+}
+
+.ticket-id {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.ticket-right {
+  width: 30%;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.qr-code-section svg {
+  width: 100px;
+  height: 100px;
+}
+
+/* Ticket Divider (Dotted line like in airplane tickets) */
+.ticket::before {
+  content: "";
+  width: 10px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 5px,
+    #101820 5px,
+    #101820 10px
+  );
+  position: absolute;
+  right: 30%;
+}
+
+/* Download Button */
+.download-btn {
+  margin-top: 20px;
+  background-color: #ff6347;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+/* Reset Button */
+.reset-btn {
+  margin-top: 20px;
+  background-color: #808080;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.reset-btn:hover {
+  background-color: #b4b1b1;
 }

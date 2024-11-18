@@ -1,0 +1,70 @@
+.events-container {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border: none;
+  background: #666; /* Light gray background */
+  color: #fff; /* White text color */
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.tabs button.active {
+  background: #fff; /* White background for the active tab */
+  color: #000; /* Black text color for the active tab */
+  font-weight: bold;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-card {
+  background: #333; /* Dark gray background */
+  color: #fff; /* White text color */
+  padding: 20px;
+  border: 1px solid #bbb; /* Light gray border */
+  border-radius: 10px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.no-events {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff; /* White text color */
+}
+
+.no-events img {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.create-event {
+  padding: 10px 20px;
+  border: none;
+  background: #666; /* Light gray background */
+  color: #fff; /* White text color */
+  cursor: pointer;
+  border-radius: 5px;
+}

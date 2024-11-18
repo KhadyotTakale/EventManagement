@@ -10,9 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "qrcode": "^1.5.4",
+    "qrcode.react": "^4.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.2"
+    "react-modal": "^3.16.1",
+    "react-router-dom": "^6.26.2",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

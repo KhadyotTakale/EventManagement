@@ -55,16 +55,15 @@
   bottom: 0;
   transform: translateZ(4rem);
   transition: 0.6s ease transform;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Subtle overlay for visibility */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .event:hover::before {
   transform: translateZ(0);
+}
+
+.nav-link {
+  text-decoration: none;
 }
 
 .event::after {
@@ -214,8 +213,10 @@
   border-radius: 20px;
 }
 
-.about-event {
+.buttons {
   margin: 20px 0;
+  display: flex;
+  gap: 10px;
 }
 
 .about-event-link {
@@ -234,6 +235,46 @@
   align-items: center;
 }
 
+.get-pass-event {
+  display: inline-block;
+  color: black;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  background-color: #f6f5f2;
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .about-event-link:hover {
   background-color: rgb(223, 103, 241);
+}
+
+.get-pass-event:hover {
+  background-color: rgb(22, 133, 16);
+}
+
+.get-pass-link {
+  display: inline-block;
+  color: black;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  background-color: #f6f5f2;
+  width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.get-pass-link:hover {
+  background-color: rgb(14, 125, 36);
 }

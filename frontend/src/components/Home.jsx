@@ -1,18 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import event from "../assets/event1.png";
 import logo from "../assets/logo.png";
 import gps from "../assets/gps.png";
+import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    loggedIn: false,
+  });
+
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      setUser(savedUser);
+    }
+
+    const handleStorageChange = () => {
+      const updatedUser = JSON.parse(localStorage.getItem("user"));
+      setUser(updatedUser || { name: "", email: "", loggedIn: false });
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
   const getFormattedMonth = () => {
     const date = new Date();
     return date.toLocaleString("default", { month: "short" }).toUpperCase(); // e.g., 'AUG'
   };
+
   const getFormattedDate = () => {
     const date = new Date();
-    return date.getDate(); // e.g., '26'
+    return date.getDate();
   };
+
   return (
     <div>
       <div className="main">
@@ -48,7 +75,7 @@ const Home = () => {
                 <p>Pune, Maharashtra</p>
               </div>
             </div>
-            <div className="about-event">
+            <div className="buttons">
               <a
                 href="https://ciiwrevents.in/NexGenMobilityShow2024/"
                 target="_blank"
@@ -57,6 +84,17 @@ const Home = () => {
               >
                 About Event
               </a>
+              {user.loggedIn && ( // Only show Get Pass if logged in
+                <Link to="/pass" className="nav-link">
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="get-pass-event"
+                  >
+                    Get Pass
+                  </a>
+                </Link>
+              )}
             </div>
           </div>
         </div>

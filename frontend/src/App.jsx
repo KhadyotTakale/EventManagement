@@ -11,6 +11,7 @@ import "./App.css";
 import Events from "./components/Events";
 import Pass from "./components/Pass";
 import Login from "./components/Login";
+import Badge from "./components/Badge";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/events" element={<Events />} />
           <Route path="/pass" element={<Pass />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/badge" element={<Badge />} />
         </Routes>
       </Layout>
     </Router>

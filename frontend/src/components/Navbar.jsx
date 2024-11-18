@@ -1,31 +1,34 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Add useNavigate for redirection
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import elegance from "../assets/new-year.png";
-import login from "../assets/login.png";
 
 const Navbar = () => {
   const [user, setUser] = useState({
     name: "",
     email: "",
-    loggedIn: false, // Initially the user is not logged in
+    loggedIn: false,
   });
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // To programmatically navigate to other routes
+  const navigate = useNavigate();
 
-  const handleDropdownToggle = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      setUser(savedUser);
+    }
+  }, []);
 
   const handleSignOut = () => {
-    setUser({ name: "", email: "", loggedIn: false }); // Reset user data
+    setUser({ name: "", email: "", loggedIn: false });
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("storage")); // Manually trigger storage event
+    navigate("/"); // Redirect to home after sign-out
   };
 
   const handleSignInClick = () => {
-    // Redirect to the login page if the user is not logged in
     if (!user.loggedIn) {
-      navigate("/login"); // Redirects to login page
+      navigate("/login");
     }
   };
 
@@ -42,37 +45,21 @@ const Navbar = () => {
             Home
           </Link>
         </li>
-        <li>
-          <Link to="/events" className="nav-link">
-            Events
-          </Link>
-        </li>
+        {user.loggedIn && ( // Only show Events if logged in
+          <li>
+            <Link to="/events" className="nav-link">
+              Events
+            </Link>
+          </li>
+        )}
       </ul>
 
-      <div className="login">
+      <div className="signin">
         {user.loggedIn ? (
-          <div className="profile-menu">
-            <button className="btn" onClick={handleDropdownToggle}>
-              {user.name || "Profile"}
-            </button>
-            {dropdownOpen && (
-              <div className="dropdown-menu">
-                <p>{user.name}</p>
-                <p>{user.email}</p>
-                <ul>
-                  <li>
-                    <Link to="/profile">View Profile</Link>
-                  </li>
-                  <li>
-                    <Link to="/settings">Settings</Link>
-                  </li>
-                  <li onClick={handleSignOut}>Sign Out</li>
-                </ul>
-              </div>
-            )}
-          </div>
+          <button className="btn" onClick={handleSignOut}>
+            Sign Out
+          </button>
         ) : (
-          // Show the Sign In button if the user is not logged in
           <button className="btn" onClick={handleSignInClick}>
             Sign In
           </button>
