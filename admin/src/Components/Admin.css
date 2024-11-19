@@ -6,6 +6,8 @@
   background-color: #f5f6fa;
   color: #333;
   margin: 0;
+  padding: 0; /* Ensure no padding or margin in the parent container */
+  box-sizing: border-box;
 }
 
 /* Sidebar styles */
@@ -18,6 +20,7 @@
   justify-content: space-between;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
 }
 
 .sidebar h2 {
@@ -31,6 +34,7 @@
 .sidebar nav ul {
   list-style: none;
   padding: 0;
+  margin: 0; /* Ensure no margin on the ul element */
 }
 
 .sidebar nav ul li {
@@ -65,9 +69,11 @@
 /* Main content styles */
 .content {
   flex: 1;
-  padding: 30px;
-  overflow-y: auto;
+  padding: 20px;
   background-color: #ecf0f1;
+  margin: 0; /* Ensure no margin on the content */
+  box-sizing: border-box; /* Ensure padding is included in width calculation */
+  overflow-y: auto;
 }
 
 .content h1 {
@@ -159,6 +165,7 @@
 
   .content {
     padding: 20px;
+    margin-left: 0; /* Adjust for responsive design */
   }
 
   .admin-form {

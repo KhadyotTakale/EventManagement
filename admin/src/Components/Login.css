@@ -4,17 +4,17 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f2f5; /* Subtle grey background */
+  background-color: #e0e0e0; /* Subtle grey background */
   margin: 0;
   font-family: "Roboto", sans-serif; /* Modern font */
 }
 
 /* Login Card */
 .login-card {
-  background: white;
+  background: #fff;
   padding: 40px 30px;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   text-align: center;
@@ -22,10 +22,10 @@
 
 /* Login Header */
 .login-card h1 {
-  font-size: 28px;
+  font-size: 24px;
   margin-bottom: 20px;
   color: #333;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Form Group */
@@ -97,7 +97,7 @@
   }
 
   .login-card h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .login-card .login-btn {

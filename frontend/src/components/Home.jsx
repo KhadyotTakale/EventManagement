@@ -4,6 +4,7 @@ import event from "../assets/event1.png";
 import logo from "../assets/logo.png";
 import gps from "../assets/gps.png";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
   const [user, setUser] = useState({
@@ -11,12 +12,25 @@ const Home = () => {
     email: "",
     loggedIn: false,
   });
+  const [eventData, setEventData] = useState(null);
 
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     if (savedUser) {
       setUser(savedUser);
     }
+
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/api/event");
+        console.log("Fetched event data:", res.data); // Debug log
+        setEventData(res.data);
+      } catch (err) {
+        console.error("Failed to fetch event data:", err);
+      }
+    };
+
+    fetchEvent();
 
     const handleStorageChange = () => {
       const updatedUser = JSON.parse(localStorage.getItem("user"));
@@ -30,13 +44,24 @@ const Home = () => {
     };
   }, []);
 
-  const getFormattedMonth = () => {
-    const date = new Date();
-    return date.toLocaleString("default", { month: "short" }).toUpperCase(); // e.g., 'AUG'
+  if (!eventData) return <p>Loading...</p>;
+
+  const {
+    eventName,
+    eventDate,
+    eventTime,
+    eventLocation,
+    eventImage,
+    eventGeoLocation,
+  } = eventData;
+
+  const getFormattedMonth = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString("default", { month: "short" }).toUpperCase();
   };
 
-  const getFormattedDate = () => {
-    const date = new Date();
+  const getFormattedDate = (dateString) => {
+    const date = new Date(dateString);
     return date.getDate();
   };
 
@@ -44,7 +69,7 @@ const Home = () => {
     <div>
       <div className="main">
         <div className="left">
-          <img className="event" src={event} alt="Event" />
+          <img className="event" src={eventImage} alt={eventName} />
           <p>Hosted By</p>
           <hr />
           <div className="host">
@@ -60,19 +85,24 @@ const Home = () => {
             </p>
             <div className="date-container">
               <div className="date-box">
-                <div className="month">{getFormattedMonth()}</div>
-                <div className="day">{getFormattedDate()}</div>
+                <div className="month">{getFormattedMonth(eventDate)}</div>
+                <div className="day">{getFormattedDate(eventDate)}</div>
               </div>
               <div className="event-details">
-                <p>Thursday, October 3</p>
-                <p>2:00 PM - 6:00 PM</p>
+                <p>
+                  {new Date(eventDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+                <p>{eventTime}</p>
               </div>
             </div>
             <div className="gps">
               <img src={gps} alt="GPS" />
               <div className="location-details">
-                <p>Elegant Office</p>
-                <p>Pune, Maharashtra</p>
+                <p>{eventLocation}</p>
               </div>
             </div>
             <div className="buttons">
@@ -84,7 +114,7 @@ const Home = () => {
               >
                 About Event
               </a>
-              {user.loggedIn && ( // Only show Get Pass if logged in
+              {user.loggedIn && (
                 <Link to="/pass" className="nav-link">
                   <a
                     target="_blank"
@@ -105,22 +135,12 @@ const Home = () => {
           <hr />
         </div>
         <div className="map">
-          <p>
-            A/B, Dattaprasad, 1st Floor Laxmi Park, Near Bhide Hospital, 722,
-            Navi Peth
-            <br /> Pune, Maharashtra 411030, India
-          </p>
-          <div>
-            <iframe
-              className="map-iframe"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.5343313206986!2d73.8433034!3d18.5047407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c00ab847bcb1%3A0xa2fbe9f04f278599!2sElegant%20Enterprises!5e0!3m2!1sen!2sus!4v1727681056576!5m2!1sen!2sus"
-              width="600"
-              height="450"
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
+          <p>{eventLocation}</p>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: eventGeoLocation,
+            }}
+          ></div>
         </div>
       </div>
     </div>
