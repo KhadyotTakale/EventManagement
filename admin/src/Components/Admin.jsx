@@ -1,11 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import ManageEvents from "./ManageEvents";
 import Settings from "./Settings";
+import Login from "./Login"; // Import Login component
 import "./Admin.css";
 
-const Admin = ({ onLogout }) => {
+const Admin = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false);
+  };
+
+  const handleLogin = () => {
+    localStorage.setItem("authToken", "yourAuthTokenHere"); // You will replace this token with the actual one
+    setIsLoggedIn(true);
+  };
+
+  if (!isLoggedIn) {
+    return <Login onLogin={handleLogin} />; // Pass handleLogin to Login component
+  }
+
   return (
     <div className="admin-panel">
       <aside className="sidebar">
@@ -22,7 +46,7 @@ const Admin = ({ onLogout }) => {
               <Link to="/admin/settings">Settings</Link>
             </li>
             <li>
-              <button onClick={onLogout}>Logout</button>
+              <button onClick={handleLogout}>Logout</button>
             </li>
           </ul>
         </nav>

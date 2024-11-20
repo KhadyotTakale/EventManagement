@@ -1,56 +1,64 @@
-import React, { useState } from "react";
-import "./Events.css";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Events.css"; // Add your CSS file for styling
 
 const Events = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
+  const [upcomingEvent, setUpcomingEvent] = useState(null);
+  const [pastEvents, setPastEvents] = useState([]);
 
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "Event 1",
-      date: "2024-10-10",
-      location: "New York",
-      guests: 10,
-    },
-    {
-      id: 2,
-      title: "Event 2",
-      date: "2024-11-15",
-      location: "Los Angeles",
-      guests: 20,
-    },
-    {
-      id: 3,
-      title: "Event 3",
-      date: "2024-12-20",
-      location: "Chicago",
-      guests: 30,
-    },
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/events");
+        const events = res.data;
 
-  const pastEvents = [
-    {
-      id: 1,
-      title: "Event A",
-      date: "2024-08-10",
-      location: "Boston",
-      guests: 5,
-    },
-    {
-      id: 2,
-      title: "Event B",
-      date: "2024-07-15",
-      location: "San Francisco",
-      guests: 15,
-    },
-    {
-      id: 3,
-      title: "Event C",
-      date: "2024-06-20",
-      location: "Seattle",
-      guests: 25,
-    },
-  ];
+        // Debugging: Log fetched events
+        console.log("Fetched events:", events);
+
+        // Sort events by event date (descending order)
+        const sortedEvents = events.sort(
+          (a, b) => new Date(b.eventDate) - new Date(a.eventDate)
+        );
+
+        // Get current date
+        const now = new Date();
+
+        // Filter upcoming events and pick the most recently updated one
+        const upcomingEvents = sortedEvents.filter(
+          (event) => new Date(event.eventDate) >= now
+        );
+        console.log("Upcoming events:", upcomingEvents);
+
+        const latestUpcomingEvent =
+          upcomingEvents.length > 0 ? upcomingEvents[0] : null;
+
+        // Filter past events and limit to a maximum of 3
+        const past = sortedEvents
+          .filter((event) => new Date(event.eventDate) < now)
+          .slice(0, 3); // Limit to the first 3 most recent past events
+
+        console.log("Past events (up to 3):", past);
+
+        // Set state
+        setUpcomingEvent(latestUpcomingEvent);
+        setPastEvents(past);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="events-container">
@@ -70,31 +78,31 @@ const Events = () => {
         </button>
       </div>
       <div className="events-list">
-        {activeTab === "upcoming" && upcomingEvents.length === 0 && (
-          <div className="no-events">
-            <img src="path/to/your/image.png" alt="No Upcoming Events" />
-            <p>No Upcoming Events</p>
-            <button className="create-event">+ Create Event</button>
+        {activeTab === "upcoming" && upcomingEvent && (
+          <div className="event-card">
+            <img src={upcomingEvent.eventImage} alt={upcomingEvent.eventName} />
+            <h3>{upcomingEvent.eventName}</h3>
+            <p>{formatDate(upcomingEvent.eventDate)}</p>
+            <p>{upcomingEvent.eventTime}</p>
           </div>
         )}
-        {activeTab === "upcoming" &&
-          upcomingEvents.map((event) => (
-            <div key={event.id} className="event-card">
-              <h3>{event.title}</h3>
-              <p>{event.date}</p>
-              <p>{event.location}</p>
-              <p>Guests: {event.guests}</p>
-            </div>
-          ))}
+        {activeTab === "upcoming" && !upcomingEvent && (
+          <p>No upcoming events found.</p>
+        )}
+
         {activeTab === "past" &&
-          pastEvents.map((event) => (
-            <div key={event.id} className="event-card">
-              <h3>{event.title}</h3>
-              <p>{event.date}</p>
-              <p>{event.location}</p>
-              <p>Guests: {event.guests}</p>
+          pastEvents.length > 0 &&
+          pastEvents.map((event, index) => (
+            <div key={index} className="event-card">
+              <img src={event.eventImage} alt={event.eventName} />
+              <h3>{event.eventName}</h3>
+              <p>{formatDate(event.eventDate)}</p>
+              <p>{event.eventTime}</p>
             </div>
           ))}
+        {activeTab === "past" && pastEvents.length === 0 && (
+          <p>No past events found.</p>
+        )}
       </div>
     </div>
   );

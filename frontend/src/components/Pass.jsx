@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import html2canvas from "html2canvas";
-import eventImage from "../assets/event1.png";
+import eventImage from "../assets/event1.png"; // This can be dynamic if you pull from event data
+import axios from "axios";
 import "./Pass.css";
 
 const Pass = () => {
@@ -10,8 +11,31 @@ const Pass = () => {
     name: "",
     date: "",
   });
+  const [eventData, setEventData] = useState(null); // New state for event data
   const [entryId, setEntryId] = useState(""); // New state to store entry ID
   const passRef = useRef(null);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get("http://localhost:4000/api/event");
+        console.log("Fetched event data for Pass page:", res.data); // Debug log
+        setEventData(res.data);
+
+        // Automatically set the date in formData to the latest event date
+        if (res.data && res.data.eventDate) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            date: res.data.eventDate,
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch event data for Pass page:", err);
+      }
+    };
+
+    fetchEvent();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -27,20 +51,38 @@ const Pass = () => {
     setShowForm(false);
   };
 
-  const downloadPass = () => {
+  const downloadPass = async () => {
     if (passRef.current) {
-      html2canvas(passRef.current).then((canvas) => {
+      html2canvas(passRef.current).then(async (canvas) => {
         const link = document.createElement("a");
         link.download = "event_pass.png";
         link.href = canvas.toDataURL();
         link.click();
+
+        try {
+          const saveResponse = await axios.post(
+            "http://localhost:4000/api/register",
+            {
+              name: formData.name,
+              entryId,
+              eventId: eventData._id,
+            }
+          );
+          console.log("Registration saved successfully.");
+
+          // Notify any listener or update global state here
+          // For example, using a simple event bus or a state management library
+          window.dispatchEvent(new CustomEvent("registrationUpdated"));
+        } catch (error) {
+          console.error("Error saving registration:", error);
+        }
       });
     }
   };
 
   const resetForm = () => {
     setShowForm(true);
-    setFormData({ name: "", date: "" });
+    setFormData({ name: "", date: eventData?.eventDate || "" });
     setEntryId(""); // Reset entry ID
   };
 
@@ -77,19 +119,14 @@ const Pass = () => {
             <label className="n-me" htmlFor="date">
               Date
             </label>
-            <select
+            <input
+              type="text"
               id="date"
               name="date"
-              value={formData.date}
-              onChange={handleChange}
+              value={formatDate(formData.date)}
+              disabled
               required
-            >
-              <option value="">Select a date</option>
-              <option value="2024-10-18">October 18, 2024</option>
-              <option value="2024-10-19">October 19, 2024</option>
-              <option value="2024-10-20">October 20, 2024</option>
-              <option value="2024-10-21">October 21, 2024</option>
-            </select>
+            />
           </div>
           <button type="submit" className="generate-btn">
             Generate Pass

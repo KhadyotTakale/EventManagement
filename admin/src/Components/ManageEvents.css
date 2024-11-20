@@ -1,92 +1,74 @@
+/* ManageEvents.css */
 body {
-  background-color: #eef3f7;
-  font-family: "Inter", Arial, sans-serif;
+  font-family: "Arial", sans-serif;
+  background-color: #f4f4f9;
   margin: 0;
-  padding: 0;
-}
-
-.manage-events-container {
-  max-width: 600px;
-  margin: 3rem auto;
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid #dce3e8;
+  padding: 20px;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 h2 {
   text-align: center;
-  color: #2c3e50;
-  margin-bottom: 2rem;
-  font-weight: 700;
-  font-size: 1.75rem;
+  color: #333;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
+form div {
+  margin-bottom: 20px;
 }
 
 label {
-  margin-bottom: 0.5rem;
-  color: #34495e;
-  font-weight: 600;
-  font-size: 0.95rem;
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
 }
 
-input {
-  padding: 0.75rem;
-  border: 1px solid #bdc3c7;
-  border-radius: 8px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  font-size: 0.95rem;
-}
-
-input:focus {
+input[type="text"],
+input[type="date"],
+input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus {
+  border-color: #4a90e2;
 }
 
 button {
-  background-color: #3498db;
-  color: #ffffff;
+  background-color: #4a90e2;
+  color: #fff;
+  padding: 10px 20px;
   border: none;
-  padding: 0.85rem;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-  font-weight: 600;
-  font-size: 1rem;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: #357abd;
 }
 
-button:active {
-  transform: scale(0.97);
-}
-
-@media (max-width: 768px) {
-  .manage-events-container {
-    width: 90%;
-    padding: 1.5rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-}
-
-.form-group input::placeholder {
-  color: #bdc3c7;
-  font-style: italic;
+form div:last-child {
+  text-align: center;
 }
