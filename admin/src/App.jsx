@@ -9,17 +9,15 @@ import Admin from "./Components/Admin";
 import Login from "./Components/Login";
 
 const App = () => {
-  // Initialize state based on local storage to persist login status
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("authToken") ? true : false
   );
 
-  // Save login state to local storage when it changes
   useEffect(() => {
     if (isLoggedIn) {
-      localStorage.setItem("authToken", "yourAuthTokenHere"); // Set the token when logged in
+      localStorage.setItem("authToken", "yourAuthTokenHere");
     } else {
-      localStorage.removeItem("authToken"); // Remove the token when logged out
+      localStorage.removeItem("authToken");
     }
   }, [isLoggedIn]);
 
