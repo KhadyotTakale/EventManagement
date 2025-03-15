@@ -10,7 +10,9 @@ const Events = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/events");
+        const res = await axios.get(
+          "https://eventmanagement-backend-31sh.onrender.com/events"
+        );
         const events = res.data;
 
         // Debugging: Log fetched events
