@@ -23,7 +23,7 @@ const Home = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          "https://eventmanagement-backend-31sh.onrender.com/events"
+          "https://eventmanagement-backend-31sh.onrender.com/api/event"
         );
         console.log("Fetched event data:", res.data); // Debug log
         setEventData(res.data);

@@ -23,7 +23,10 @@ const ManageEvents = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/events", formData);
+      await axios.post(
+        "https://eventmanagement-backend-31sh.onrender.com/events",
+        formData
+      );
       alert("Event has been added successfully!");
       setFormData({
         eventName: "",

@@ -63,7 +63,7 @@ const Pass = () => {
 
         try {
           const saveResponse = await axios.post(
-            "http://localhost:4000/api/register",
+            "https://eventmanagement-backend-31sh.onrender.com/api/register",
             {
               name: formData.name,
               entryId,

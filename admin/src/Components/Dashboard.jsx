@@ -13,7 +13,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchEventStats = async () => {
-      const res = await axios.get("http://localhost:4000/api/event-stats");
+      const res = await axios.get(
+        "https://eventmanagement-backend-31sh.onrender.com/api/event-stats"
+      );
       updateEventStats(res.data);
     };
 
@@ -46,7 +48,7 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/mark-attendance",
+        "https://eventmanagement-backend-31sh.onrender.com/api/mark-attendance",
         {
           entryId: uniqueCode,
         }
