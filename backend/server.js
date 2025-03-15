@@ -1,26 +1,20 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-// Initialize Express app
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-// Connect to MongoDB Atlas
+// Connect to MongoDB using .env
 mongoose
-  .connect(
-    "mongodb+srv://elegantpvt:elegant123@cluster0.woxtf.mongodb.net/myDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
-  .then(() => console.log("Connection successful"))
-  .catch((err) => console.error("Connection failed:", err));
+  .connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ Connection Failed:", err));
 
-// Create a schema for events
+// Event Schema
 const eventSchema = new mongoose.Schema({
   eventName: { type: String, required: true },
   eventDate: { type: Date, required: true },
@@ -28,12 +22,13 @@ const eventSchema = new mongoose.Schema({
   eventLocation: { type: String, required: true },
   eventImage: { type: String, required: true },
   eventGeoLocation: { type: String, required: true },
-  registrations: { type: Number, default: 0 }, // New field for total registrations
-  attendees: { type: Number, default: 0 }, // Total attendees
+  registrations: { type: Number, default: 0 },
+  attendees: { type: Number, default: 0 },
 });
 
-//newscheme
+const Event = mongoose.model("Event", eventSchema);
 
+// Registration Schema
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   entryId: { type: String, unique: true, required: true },
@@ -47,168 +42,86 @@ const registrationSchema = new mongoose.Schema({
 
 const Registration = mongoose.model("Registration", registrationSchema);
 
-// Create a model for the event
-const Event = mongoose.model("Event", eventSchema);
-
-// Create an endpoint to add a new event
+// Create Event
 app.post("/events", async (req, res) => {
   try {
-    const {
-      eventName,
-      eventDate,
-      eventTime,
-      eventLocation,
-      eventImage,
-      eventGeoLocation,
-    } = req.body;
-    const newEvent = new Event({
-      eventName,
-      eventDate,
-      eventTime,
-      eventLocation,
-      eventImage,
-      eventGeoLocation,
-    });
+    const newEvent = new Event(req.body);
     await newEvent.save();
     res
       .status(201)
-      .json({ message: "Event created successfully", event: newEvent });
+      .json({ message: "✅ Event created successfully", event: newEvent });
   } catch (error) {
-    console.error("Error saving event:", error);
-    res.status(500).json({ message: "Error creating event", error });
+    res.status(500).json({ message: "❌ Error creating event", error });
   }
 });
 
-// Create an endpoint to fetch all events
+// Get All Events
 app.get("/events", async (req, res) => {
   try {
     const events = await Event.find();
     res.status(200).json(events);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching events", error });
+    res.status(500).json({ message: "❌ Error fetching events", error });
   }
 });
 
-//home.jsx get
-
-// Fetch the most recent event
+// Get Most Recent Event
 app.get("/api/event", async (req, res) => {
   try {
-    // Sort by creation date in descending order and get the first document
-    const event = await Event.findOne().sort({ _id: -1 }); // Sort by `_id` works as it increments with time
-    if (!event) {
-      return res.status(404).json({ message: "No event found" });
-    }
+    const event = await Event.findOne().sort({ _id: -1 });
+    if (!event) return res.status(404).json({ message: "❌ No event found" });
     res.status(200).json(event);
   } catch (error) {
-    console.error("Error fetching event:", error);
-    res.status(500).json({ message: "Error fetching event", error });
+    res.status(500).json({ message: "❌ Error fetching event", error });
   }
 });
 
-//eventspage past upcoming
-
-// Endpoint to increment registrations
-
-//newchanegs
-
-// Endpoint to mark attendance
-app.post("/api/mark-attendance", async (req, res) => {
-  const { entryId } = req.body;
-
-  try {
-    const registration = await Registration.findOne({ entryId });
-
-    if (!registration) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Entry not found." });
-    }
-
-    if (registration.attended) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Already marked as attended." });
-    }
-
-    registration.attended = true;
-    await registration.save();
-
-    // Increment the attendees count in the event
-    const event = await Event.findByIdAndUpdate(
-      registration.eventId,
-      { $inc: { attendees: 1 } },
-      { new: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: "Attendance marked successfully.",
-      eventId: registration.eventId,
-    });
-  } catch (error) {
-    console.error("Error marking attendance:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error marking attendance." });
-  }
-});
-
-//registeed candidates
-
+// Register for Event
 app.post("/api/register", async (req, res) => {
-  const { name, entryId, eventId } = req.body;
-
   try {
+    const { name, entryId, eventId } = req.body;
     const registration = new Registration({ name, entryId, eventId });
     await registration.save();
-
-    await Event.findByIdAndUpdate(
-      eventId,
-      { $inc: { registrations: 1 } },
-      { new: true }
-    );
-
-    res.status(201).json({ message: "Registration saved successfully." });
+    await Event.findByIdAndUpdate(eventId, { $inc: { registrations: 1 } });
+    res.status(201).json({ message: "✅ Registration successful" });
   } catch (error) {
-    console.error("Error saving registration:", error);
-    res.status(500).json({ message: "Error saving registration.", error });
+    res.status(500).json({ message: "❌ Error saving registration", error });
   }
 });
 
-//registration///
+// Mark Attendance
 app.post("/api/mark-attendance", async (req, res) => {
-  const { entryId } = req.body;
-
   try {
+    const { entryId } = req.body;
     const registration = await Registration.findOne({ entryId });
 
-    if (!registration) {
+    if (!registration)
       return res
         .status(404)
-        .json({ success: false, message: "Entry not found." });
-    }
-
-    if (registration.attended) {
+        .json({ success: false, message: "❌ Entry not found." });
+    if (registration.attended)
       return res
         .status(400)
-        .json({ success: false, message: "Already marked as attended." });
-    }
+        .json({ success: false, message: "⚠️ Already marked as attended." });
 
     registration.attended = true;
     await registration.save();
+
+    await Event.findByIdAndUpdate(registration.eventId, {
+      $inc: { attendees: 1 },
+    });
 
     res
       .status(200)
-      .json({ success: true, message: "Attendance marked successfully." });
+      .json({ success: true, message: "✅ Attendance marked successfully." });
   } catch (error) {
-    console.error("Error marking attendance:", error);
     res
       .status(500)
-      .json({ success: false, message: "Error marking attendance." });
+      .json({ success: false, message: "❌ Error marking attendance." });
   }
 });
 
+// Get Event Statistics
 app.get("/api/event-stats", async (req, res) => {
   try {
     const stats = await Event.find().select(
@@ -216,13 +129,12 @@ app.get("/api/event-stats", async (req, res) => {
     );
     res.status(200).json(stats);
   } catch (error) {
-    console.error("Error fetching event stats:", error);
-    res.status(500).json({ message: "Error fetching event stats.", error });
+    res.status(500).json({ message: "❌ Error fetching event stats", error });
   }
 });
 
-// Start the server
+// Start the Server
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
+);
