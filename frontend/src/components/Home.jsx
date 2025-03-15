@@ -23,9 +23,10 @@ const Home = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          "https://eventmanagement-backend-31sh.onrender.com/api/event"
+          "https://eventmanagement-backend-31sh.onrender.com/api/event",
+          { timeout: 5000 } // Timeout after 5 seconds
         );
-        console.log("Fetched event data:", res.data); // Debug log
+        console.log("Fetched event data:", res.data);
         setEventData(res.data);
       } catch (err) {
         console.error("Failed to fetch event data:", err);
